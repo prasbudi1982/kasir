@@ -1,0 +1,59 @@
+
+/* HEADER TERKUNCI - TIDAK IKUT SCROLL - FIX V5 */
+header.lg\:hidden{
+  position: fixed !important;
+  top: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+  z-index: 50 !important;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+/* Beri jarak main supaya tidak ketutup header fixed */
+main{
+  padding-top: 72px !important;
+  overflow-y: auto !important;
+  -webkit-overflow-scrolling: touch;
+}
+/* Sidebar tetap fixed di desktop */
+aside{
+  position: fixed !important;
+  top: 0 !important;
+  left: 0 !important;
+  height: 100vh !important;
+  z-index: 40 !important;
+  overflow-y: auto !important;
+}
+/* Konten utama geser kanan di desktop */
+@media (min-width: 1024px){
+  header.lg\:hidden{ display: none !important; }
+  main{ padding-top: 24px !important; margin-left: 268px !important; }
+  div.flex-1.min-w-0.flex.flex-col{
+    margin-left: 268px;
+  }
+}
+/* Pastikan root container tidak overflow hidden yang merusak sticky */
+#root, #root > div{
+  overflow: visible !important;
+}
+/* Splash Screen - Warung Kode Pak W */
+#kasir-splash{
+  position:fixed; inset:0; z-index:10000; background:#0f172a;
+  display:flex; flex-direction:column; align-items:center; justify-content:center;
+  color:white; transition: opacity 0.6s ease, visibility 0.6s;
+}
+#kasir-splash.hide{ opacity:0; visibility:hidden; pointer-events:none; }
+#kasir-splash-logo{
+  width:88px; height:88px; border-radius:24px; background:white; color:#0f172a;
+  display:flex; align-items:center; justify-content:center; font-size:44px; font-weight:900;
+  box-shadow:0 20px 40px rgba(0,0,0,0.3); margin-bottom:20px;
+  animation: splashPop 0.8s ease-out;
+}
+#kasir-splash h1{ font-size:22px; font-weight:900; letter-spacing:-0.5px; margin:0; }
+#kasir-splash p{ font-size:13px; opacity:0.7; margin-top:6px; letter-spacing:2px; text-transform:uppercase; }
+#kasir-splash-bar{
+  width:120px; height:3px; background:rgba(255,255,255,0.2); border-radius:99px; margin-top:24px; overflow:hidden;
+}
+#kasir-splash-bar div{ height:100%; width:0%; background:white; border-radius:99px; animation: loading 1.8s ease-in-out forwards; }
+@keyframes splashPop{ 0%{ transform:scale(0.5); opacity:0; } 60%{ transform:scale(1.1); } 100%{ transform:scale(1); opacity:1; } }
+@keyframes loading{ 0%{ width:0%; } 60%{ width:70%; } 100%{ width:100%; } }
