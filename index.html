@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Kasir Pro - Modular</title>
+  <link rel="stylesheet" href="./css/variables.css">
+  <link rel="stylesheet" href="./css/app.css">
+  <link rel="stylesheet" href="./css/settings.css">
+  <style>
+    #kasir-stock-pin-modal{display:none;position:fixed;inset:0;background:rgba(15,23,42,0.6);z-index:9999;align-items:center;justify-content:center;padding:20px;}
+    .focusing-pulse{animation:pulse 0.6s ease-in-out 2;}
+  </style>
+</head>
+<body>
+  <div id="root"></div>
+
+  <div id="kasir-stock-pin-modal">
+    <div style="background:white;padding:24px;border-radius:16px;width:100%;max-width:360px;box-shadow:0 20px 40px rgba(0,0,0,0.2);">
+      <h3 style="font-weight:800;margin-bottom:8px;font-size:16px;">🔒 PIN Manajemen Stok</h3>
+      <p style="font-size:12px;color:#64748b;margin-bottom:12px;">Masukkan PIN untuk akses stok</p>
+      <input id="kasir-stock-pin-input" type="password" inputmode="numeric" maxlength="12" placeholder="PIN 4-12 digit" style="width:100%;padding:12px;border:1px solid #e2e8f0;border-radius:10px;" />
+      <div id="kasir-stock-pin-error" style="display:none;color:#dc2626;font-size:12px;margin-top:8px;"></div>
+      <div style="display:flex;gap:8px;margin-top:14px;">
+        <button id="kasir-stock-pin-cancel" style="flex:1;padding:12px;border:1px solid #e2e8f0;border-radius:10px;background:white;">Batal</button>
+        <button id="kasir-stock-pin-submit" style="flex:1;padding:12px;background:#0f172a;color:white;border-radius:10px;font-weight:700;">Buka</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="kasir-settings-overlay" class="kasir-settings-overlay" style="display:none; position:fixed; inset:0; z-index:9999; background:#f8fafc; overflow-y:auto;">
+    <div style="position:sticky; top:0; z-index:10; background:white; border-bottom:1px solid #e2e8f0; padding:14px 16px; display:flex; align-items:center; justify-content:space-between;">
+      <div style="display:flex;align-items:center;gap:12px;">
+        <button id="kasir-settings-close" style="width:40px;height:40px;border-radius:12px;background:#0f172a;color:white;font-size:18px;border:none;cursor:pointer;">✕</button>
+        <div><div style="font-weight:800;font-size:16px;">⚙️ Pengaturan</div><div style="font-size:11px;color:#64748b;">Tema • Printer • Toko</div></div>
+      </div>
+      <button id="kasir-settings-back" style="padding:8px 14px;border-radius:10px;border:1px solid #e2e8f0;background:white;font-size:12px;font-weight:600;">Tutup</button>
+    </div>
+
+    <div style="max-width:640px;margin:0 auto;padding:20px;display:flex;flex-direction:column;gap:16px;">
+      <div style="background:white;border:1px solid #e2e8f0;border-radius:16px;padding:18px;">
+        <h3 style="font-weight:800;margin-bottom:12px;">🏪 Info Toko</h3>
+        <div style="display:grid;gap:10px;">
+          <input id="toko-nama" placeholder="Nama Toko" style="width:100%;padding:12px;border:1px solid #e2e8f0;border-radius:10px;">
+          <input id="toko-alamat" placeholder="Alamat" style="width:100%;padding:12px;border:1px solid #e2e8f0;border-radius:10px;">
+          <input id="toko-footer" placeholder="Footer Struk" style="width:100%;padding:12px;border:1px solid #e2e8f0;border-radius:10px;">
+          <button id="save-toko" style="width:100%;padding:12px;background:#0f172a;color:white;border-radius:10px;font-weight:800;">💾 Simpan Toko</button>
+        </div>
+      </div>
+
+      <div style="background:white;border:1px solid #e2e8f0;border-radius:16px;padding:18px;">
+        <h3 style="font-weight:800;margin-bottom:12px;">🎨 Tema</h3>
+        <div style="display:flex;gap:10px;margin-bottom:12px;">
+          <div id="theme-light" class="theme-card" data-theme="light" style="flex:1;padding:20px;border:2px solid #e2e8f0;border-radius:12px;cursor:pointer;text-align:center;font-weight:700;">☀️ Light</div>
+          <div id="theme-dark" class="theme-card" data-theme="dark" style="flex:1;padding:20px;border:2px solid #e2e8f0;border-radius:12px;cursor:pointer;text-align:center;font-weight:700;">🌙 Dark</div>
+        </div>
+        <div style="display:flex;gap:10px;flex-wrap:wrap;">
+          <button class="accent-btn" data-accent="blue" style="width:44px;height:44px;border-radius:50%;background:#2563eb;border:none;cursor:pointer;"></button>
+          <button class="accent-btn" data-accent="green" style="width:44px;height:44px;border-radius:50%;background:#16a34a;border:none;cursor:pointer;"></button>
+          <button class="accent-btn" data-accent="purple" style="width:44px;height:44px;border-radius:50%;background:#7c3aed;border:none;cursor:pointer;"></button>
+          <button class="accent-btn" data-accent="orange" style="width:44px;height:44px;border-radius:50%;background:#ea580c;border:none;cursor:pointer;"></button>
+          <button class="accent-btn" data-accent="red" style="width:44px;height:44px;border-radius:50%;background:#dc2626;border:none;cursor:pointer;"></button>
+        </div>
+      </div>
+
+      <div style="background:white;border:1px solid #e2e8f0;border-radius:16px;padding:18px;">
+        <h3 style="font-weight:800;margin-bottom:4px;">🖨️ Printer</h3>
+        <div style="display:flex;align-items:center;gap:8px;font-size:12px;color:#64748b;margin-bottom:12px;">
+          <span id="kasir-printer-dot" class="printer-dot off" style="width:10px;height:10px;border-radius:50%;background:#ef4444;display:inline-block;"></span>
+          <span id="kasir-printer-label">Tidak terhubung</span>
+          <span id="printer-model-badge" style="margin-left:auto;font-size:10px;background:#f1f5f9;padding:4px 8px;border-radius:999px;">58mm | thermal</span>
+        </div>
+        <label style="font-size:12px;font-weight:600;">Tipe Printer</label>
+        <select id="printer-type" style="width:100%;padding:10px;border:1px solid #e2e8f0;border-radius:10px;margin:6px 0 12px 0;">
+          <option value="bluetooth-thermal">Bluetooth Thermal</option>
+          <option value="bluetooth">Bluetooth Generic</option>
+          <option value="usb">USB / Browser Print</option>
+          <option value="network">Network IP</option>
+          <option value="rawbt">RawBT Share</option>
+        </select>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px;">
+          <div><label style="font-size:11px;">Kertas</label><select id="paper-size" style="width:100%;padding:8px;border:1px solid #e2e8f0;border-radius:8px;"><option value="58">58mm</option><option value="80">80mm</option></select></div>
+          <div><label style="font-size:11px;">Density</label><select id="print-density" style="width:100%;padding:8px;border:1px solid #e2e8f0;border-radius:8px;"><option value="normal">Normal</option><option value="high">High</option></select></div>
+        </div>
+        <div id="printer-config-bluetooth" class="printer-config" style="display:block;background:#f8fafc;padding:12px;border-radius:10px;margin-bottom:10px;">
+          <button id="btn-connect-bt" style="width:100%;padding:10px;background:#0f172a;color:white;border-radius:8px;font-weight:700;">🔗 Konek Bluetooth</button>
+          <div style="display:flex;gap:8px;margin-top:8px;">
+            <button id="btn-test-print" style="flex:1;padding:10px;border:1px solid #e2e8f0;background:white;border-radius:8px;">Test Print</button>
+            <button id="btn-disconnect" style="flex:1;padding:10px;border:1px solid #fecaca;background:#fff1f2;color:#991b1b;border-radius:8px;">Disconnect</button>
+          </div>
+        </div>
+        <div id="printer-config-network" class="printer-config" style="display:none;background:#f8fafc;padding:12px;border-radius:10px;margin-bottom:10px;">
+          <input id="printer-ip" placeholder="IP Printer ex: 192.168.1.100" style="width:100%;padding:8px;border:1px solid #e2e8f0;border-radius:8px;margin-bottom:6px;">
+          <input id="printer-port" placeholder="Port 9100" value="9100" style="width:100%;padding:8px;border:1px solid #e2e8f0;border-radius:8px;margin-bottom:6px;">
+          <button id="btn-test-network" style="width:100%;padding:10px;background:#0f172a;color:white;border-radius:8px;">Test Network</button>
+        </div>
+        <div id="printer-config-usb" class="printer-config" style="display:none;background:#f8fafc;padding:12px;border-radius:10px;">
+          <button id="btn-test-usb" style="width:100%;padding:10px;background:#0f172a;color:white;border-radius:8px;">🖨️ Print Browser</button>
+        </div>
+        <label style="display:flex;align-items:center;gap:8px;margin-top:12px;font-size:13px;"><input type="checkbox" id="auto-print-toggle"> Auto Print setelah Bayar</label>
+      </div>
+      <div id="settings-extra-mount"></div>
+    </div>
+  </div>
+
+  <div id="kasir-print-root" style="white-space:pre-wrap;font-family:monospace;"></div>
+  <div id="scanner-containers" style="display:none;"></div>
+  <script type="module" src="./js/main.js"></script>
+</body>
+</html>
